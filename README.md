@@ -1,2 +1,2 @@
-# yusufefe2026.github.io
+# BASKAN OLNA 3D OYUN.github.io
 Başkan Simülatörü — resmi site ve oyun
