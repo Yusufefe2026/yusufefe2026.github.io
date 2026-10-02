@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Başkan Simülatörü — Ülkeyi sen yönet</title>
+<meta name="description" content="Başkan Simülatörü: tarayıcıda oynanan 3D ülke yönetim oyunu. Kararlar, zincirleme olaylar, meclis oylamaları, senaryolar ve 20 başarım.">
+<style>
+:root{--bg:#0b1326;--bg2:#111c36;--card:rgba(255,255,255,.05);--line:rgba(255,255,255,.1);--gold:#f2c14e;--blue:#5aa9ff;--text:#eef2fb;--muted:#9fb0cf}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+a{color:inherit}
+.wrap{max-width:1100px;margin:0 auto;padding:0 20px}
+nav{position:sticky;top:0;z-index:10;background:rgba(11,19,38,.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:60px;gap:12px}
+.logo{font-weight:800;letter-spacing:.3px}.logo span{color:var(--gold)}
+.links{display:flex;gap:18px;font-size:14px;color:var(--muted)}.links a{text-decoration:none}.links a:hover{color:var(--text)}
+.lang{background:var(--card);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font-weight:600}
+.btn{display:inline-block;background:linear-gradient(135deg,#f6d36b,#e0a92e);color:#1a1405;font-weight:800;text-decoration:none;padding:14px 28px;border-radius:12px;box-shadow:0 8px 30px rgba(242,193,78,.25);transition:transform .15s}
+.btn:hover{transform:translateY(-2px)}
+.btn.ghost{background:transparent;color:var(--text);border:1px solid var(--line);box-shadow:none}
+header{position:relative;overflow:hidden;padding:80px 0 0}
+header h1{font-size:clamp(36px,6vw,64px);line-height:1.05;margin:0 0 16px}
+header h1 em{font-style:normal;color:var(--gold)}
+header p{font-size:18px;color:var(--muted);max-width:560px;margin:0 0 28px}
+.stats{display:flex;gap:28px;flex-wrap:wrap;margin:28px 0 0;color:var(--muted);font-size:14px}.stats b{display:block;color:var(--text);font-size:26px}
+.sky{margin-top:40px;height:260px;position:relative;animation:sky 24s ease-in-out infinite alternate;background:linear-gradient(#3b6fb6,#f4a261)}
+@keyframes sky{0%{background:linear-gradient(#5b9be0,#bfe0ff)}50%{background:linear-gradient(#3a3f8f,#f4a261)}100%{background:linear-gradient(#060b1d,#1b2550)}}
+.sky svg{position:absolute;bottom:0;left:0;width:100%;height:100%}
+.win{animation:win 24s ease-in-out infinite alternate}@keyframes win{0%,55%{opacity:0}80%,100%{opacity:1}}
+section{padding:80px 0;border-top:1px solid var(--line)}
+h2{font-size:clamp(26px,4vw,38px);margin:0 0 10px}.sub{color:var(--muted);margin:0 0 36px;max-width:640px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px}
+.card .i{font-size:28px}.card h3{margin:8px 0 6px;font-size:18px}.card p{margin:0;color:var(--muted);font-size:15px}
+.event{background:linear-gradient(135deg,rgba(90,169,255,.12),rgba(242,193,78,.08));border:1px solid var(--line);border-radius:18px;padding:28px;max-width:720px}
+.choices{display:flex;gap:12px;flex-wrap:wrap;margin-top:16px}.choices button{flex:1;min-width:200px;background:var(--card);border:1px solid var(--line);color:var(--text);padding:14px;border-radius:12px;cursor:pointer;font-size:15px;text-align:left}
+.choices button:hover{border-color:var(--gold)}#result{margin-top:16px;color:var(--gold);min-height:24px}
+table{width:100%;border-collapse:collapse}td,th{padding:12px;border-bottom:1px solid var(--line);text-align:left}th{color:var(--muted);font-weight:600;font-size:14px}
+.ach{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}.ach div{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;font-size:14px}.ach b{display:block}
+.steps{counter-reset:s;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}.steps .card::before{counter-increment:s;content:counter(s);display:inline-grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--gold);color:#1a1405;font-weight:800}
+details{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:10px}summary{cursor:pointer;font-weight:600}details p{color:var(--muted);margin:10px 0 0}
+.cta{text-align:center}
+footer{padding:30px 0;color:var(--muted);font-size:14px;border-top:1px solid var(--line);text-align:center}
+@media(max-width:720px){.links{display:none}header{padding-top:50px}}
+@media(prefers-reduced-motion:reduce){.sky,.win{animation:none}}
+</style>
+</head>
+<body>
+<nav><div class="wrap"><div class="logo">🏛️ Başkan <span>Simülatörü</span></div>
+<div class="links"><a href="#ozellikler" data-t="nf">Özellikler</a><a href="#modlar" data-t="nm">Modlar</a><a href="#basarimlar" data-t="na">Başarımlar</a><a href="#sss" data-t="nq">SSS</a></div>
+<div><button class="lang" id="lang">EN</button></div></div></nav>
+
+<header><div class="wrap">
+<h1 data-t="h1">Ülkeyi <em>sen</em> yönet.</h1>
+<p data-t="hp">Kararlarını ver, bütçeyi dengele, meclisi ikna et ve şehrini büyüt. Her seçimin sonuçları aylar sonra karşına çıkabilir.</p>
+<a class="btn" href="oyun.html" data-t="play">▶ Hemen Oyna</a> <a class="btn ghost" href="#ozellikler" data-t="more">Daha fazla</a>
+<div class="stats"><div><b>20</b><span data-t="s1">başarım</span></div><div><b>4</b><span data-t="s2">oyun modu</span></div><div><b>8</b><span data-t="s3">yıllık görev</span></div><div><b>0 ₺</b><span data-t="s4">ücretsiz, kurulum yok</span></div></div>
+</div>
+<div class="sky"><svg viewBox="0 0 1200 260" preserveAspectRatio="none"><g fill="#0a1120">
+<rect x="0" y="170" width="90" height="90"/><rect x="100" y="120" width="70" height="140"/><rect x="180" y="150" width="110" height="110"/><rect x="300" y="80" width="60" height="180"/><polygon points="370,260 370,140 430,110 490,140 490,260"/><rect x="500" y="160" width="90" height="100"/><rect x="600" y="40" width="56" height="220"/><rect x="624" y="20" width="8" height="22"/><rect x="666" y="130" width="100" height="130"/><rect x="776" y="100" width="70" height="160"/><ellipse cx="900" cy="150" rx="44" ry="34"/><rect x="850" y="150" width="100" height="110"/><rect x="960" y="170" width="80" height="90"/><rect x="1050" y="110" width="70" height="150"/><rect x="1130" y="160" width="70" height="100"/></g>
+<g class="win" fill="#ffd76a"><rect x="115" y="140" width="8" height="10"/><rect x="145" y="170" width="8" height="10"/><rect x="312" y="100" width="8" height="10"/><rect x="335" y="150" width="8" height="10"/><rect x="612" y="70" width="8" height="10"/><rect x="636" y="120" width="8" height="10"/><rect x="612" y="180" width="8" height="10"/><rect x="790" y="130" width="8" height="10"/><rect x="820" y="190" width="8" height="10"/><rect x="1065" y="140" width="8" height="10"/><rect x="1095" y="200" width="8" height="10"/><rect x="690" y="160" width="8" height="10"/><rect x="200" y="180" width="8" height="10"/></g>
+<circle cx="628" cy="18" r="4" fill="#ff4d4d"/></svg></div>
+</header>
+
+<section id="ozellikler"><div class="wrap">
+<h2 data-t="fh">Bir ülkeyi yönetmek için her şey</h2><p class="sub" data-t="fs">Onay, ekonomi, istikrar ve hazine arasında denge kur. Her karar bir bedel ister.</p>
+<div class="grid">
+<div class="card"><div class="i">🏙️</div><h3>Yaşayan 3D şehir</h3><p>Hastane, üniversite, müze, emniyet merkezi ve finans kulesi inşa et; şehrin büyüdükçe değişsin.</p></div>
+<div class="card"><div class="i">🔗</div><h3>Zincirleme olaylar</h3><p>Bugünkü kararın 2–3 ay sonra yeni bir krize ya da fırsata dönüşür.</p></div>
+<div class="card"><div class="i">🏛️</div><h3>Meclis oylamaları</h3><p>Partindeki Reformcular, Muhafazakârlar ve Liberaller oy verir. Sadakatleri düşerse yasan düşer.</p></div>
+<div class="card"><div class="i">🌗</div><h3>Gündüz ve gece</h3><p>Şehir sabahtan geceye döner, ışıklar yanar, müzik ruh haline göre değişir.</p></div>
+<div class="card"><div class="i">📈</div><h3>İstatistikler</h3><p>Onay, ekonomi ve hazinenin geçmişini grafiklerle takip et.</p></div>
+<div class="card"><div class="i">📱</div><h3>Her cihazda</h3><p>Bilgisayarda ve telefonda tarayıcıdan oyna. Kurulum yok, kayıt otomatik.</p></div>
+</div></div></section>
+
+<section><div class="wrap">
+<h2 data-t="eh">Bir karar, birçok sonuç</h2><p class="sub" data-t="es">Oyundan bir örnek: ne yapardın?</p>
+<div class="event"><b>📰 Bakanlıkta yolsuzluk iddiası</b><p style="color:var(--muted);margin:8px 0 0">Bir gazeteci, ihalelerde usulsüzlük olduğunu iddia ediyor.</p>
+<div class="choices"><button data-r="Soruşturma başladı. Onay −3, istikrar +4. İki ay sonra mahkeme süreci seni bekliyor…">🔍 Bağımsız soruşturma başlat</button><button data-r="Şimdilik sessizlik. Onay korunuyor… ama aylar sonra gazeteci belgeleri yayımlayabilir.">🤐 Konuyu örtbas et</button></div><div id="result"></div></div>
+</div></section>
+
+<section id="modlar"><div class="wrap">
+<h2 data-t="mh">Oyun modları</h2><p class="sub" data-t="ms">Kolay, normal ve zor seviyeleriyle birlikte.</p>
+<div style="overflow-x:auto"><table><tr><th>Mod</th><th>Hedef</th></tr>
+<tr><td>🗽 Serbest yönetim</td><td>8 yıl boyunca görevde kal, iki dönemi tamamla</td></tr>
+<tr><td>📉 Ekonomik çöküş</td><td>18 ayda ekonomi ≥55, hazine ≥0</td></tr>
+<tr><td>🏗️ Yeniden doğuş</td><td>24 ayda 4 yapı, istikrar ≥60, onay ≥50</td></tr>
+<tr><td>🧾 Borç batağı</td><td>12 ayda hazine ≥20, ekonomi ≥45</td></tr></table></div>
+</div></section>
+
+<section id="basarimlar"><div class="wrap">
+<h2 data-t="ah">20 başarım</h2><p class="sub" data-t="as">Hepsini açabilecek misin?</p>
+<div class="ach">
+<div>✍️<b>İlk imza</b>İlk kararını ver</div><div>📅<b>İlk yıl</b>12 ayı tamamla</div><div>🗳️<b>Dört yıl daha</b>Yeniden seçil</div><div>📜<b>Tarihe geçen</b>İki dönemi tamamla</div><div>❤️<b>Halkın sevgilisi</b>Onay %80</div><div>📈<b>Ekonomi mucizesi</b>Ekonomi 85</div><div>💰<b>Dolu kasa</b>Hazine 400</div><div>🕊️<b>Huzur ülkesi</b>İstikrar 85</div><div>⚖️<b>Kusursuz denge</b>Üç gösterge 65+</div><div>🏗️<b>Müteahhit başkan</b>6 yapı inşa et</div><div>🔗<b>Kararların yankısı</b>3 olay zinciri bitir</div><div>🖋️<b>Masa başı</b>50 karar ver</div><div>🔄<b>Uçurumdan dönüş</b>Batan hazineyi kurtar</div><div>🔥<b>Zor yol</b>Zor seviyede 24 ay</div><div>🏦<b>Kurtarıcı</b>Ekonomik çöküşü kazan</div><div>🏙️<b>Küllerinden</b>Yeniden doğuşu kazan</div><div>🧾<b>Borçsuz</b>Borç batağını kazan</div><div>🤝<b>Parti birliği</b>Partini bir arada tut</div><div>🏛️<b>Meclis ustası</b>Meclisi yönet</div><div>💥<b>Kısa saltanat</b>İlk yılda görevi kaybet</div>
+</div></div></section>
+
+<section><div class="wrap">
+<h2 data-t="hh">Nasıl oynanır?</h2><p class="sub"></p>
+<div class="steps">
+<div class="card"><h3>Mod seç</h3><p>Serbest yönetim veya bir senaryo; ardından zorluk.</p></div>
+<div class="card"><h3>Karar ver</h3><p>Her ay gelen olaylara cevap ver, yasaları meclise götür.</p></div>
+<div class="card"><h3>İnşa et</h3><p>Hazineyi şehrine yatır, göstergeleri yükselt.</p></div>
+<div class="card"><h3>Görevde kal</h3><p>Seçimleri kazan, partini bir arada tut, tarihe geç.</p></div>
+</div></div></section>
+
+<section id="sss"><div class="wrap">
+<h2 data-t="qh">Sık sorulan sorular</h2><p class="sub"></p>
+<details><summary>Oyun ücretli mi?</summary><p>Hayır, tamamen ücretsiz ve tarayıcıda çalışıyor.</p></details>
+<details><summary>Kayıt nerede tutuluyor?</summary><p>Oyun ilerlemen tarayıcında otomatik kaydedilir. Aynı cihaz ve tarayıcıdan devam edebilirsin.</p></details>
+<details><summary>Telefonda oynanır mı?</summary><p>Evet, dokunmatik kontroller destekleniyor. En iyi deneyim için telefonu yatay tut.</p></details>
+<details><summary>İngilizce var mı?</summary><p>Evet, oyun menüsünden Türkçe veya İngilizce seçebilirsin.</p></details>
+</div></section>
+
+<section class="cta"><div class="wrap"><h2 data-t="ch">Ülke seni bekliyor.</h2><p class="sub" style="margin:0 auto 28px" data-t="cs">Yemin töreni hazır. İlk kararın ne olacak?</p><a class="btn" href="oyun.html" data-t="play">▶ Hemen Oyna</a></div></section>
+
+<footer>© 2026 Başkan Simülatörü</footer>
+
+<script>
+var EN={nf:"Features",nm:"Modes",na:"Achievements",nq:"FAQ",h1:"Run the <em>country</em>.",hp:"Make decisions, balance the budget, win over parliament and grow your city. Every choice can come back months later.",play:"▶ Play now",more:"Learn more",s1:"achievements",s2:"game modes",s3:"year term",s4:"free, no install",fh:"Everything you need to run a country",fs:"Balance approval, economy, stability and treasury. Every decision has a price.",eh:"One decision, many consequences",es:"An example from the game: what would you do?",mh:"Game modes",ms:"With easy, normal and hard difficulty.",ah:"20 achievements",as:"Can you unlock them all?",hh:"How to play",qh:"FAQ",ch:"The country awaits.",cs:"The oath ceremony is ready. What will your first decision be?"};
+var TR={};document.querySelectorAll("[data-t]").forEach(function(e){TR[e.dataset.t]=e.innerHTML});
+function setL(l){document.querySelectorAll("[data-t]").forEach(function(e){var d=l==="en"?EN:TR;if(d[e.dataset.t])e.innerHTML=d[e.dataset.t]});document.documentElement.lang=l;document.getElementById("lang").textContent=l==="en"?"TR":"EN";try{localStorage.setItem("bs_site_lang",l)}catch(x){}}
+document.getElementById("lang").onclick=function(){setL(document.documentElement.lang==="en"?"tr":"en")};
+try{if(localStorage.getItem("bs_site_lang")==="en")setL("en")}catch(x){}
+document.querySelectorAll(".choices button").forEach(function(b){b.onclick=function(){document.getElementById("result").textContent=b.dataset.r}});
+</script>
+</body>
+</html>
