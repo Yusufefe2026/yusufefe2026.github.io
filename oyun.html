@@ -16,11 +16,11 @@ a{color:#8ec5ff}
 <div id="l"><div style="font-size:22px;font-weight:700">Başkan Simülatörü</div><div id="m">Oyun yükleniyor…</div><div class="bar"><i id="b"></i></div></div>
 <script>
 (async function(){
-  var N=10, parts=[], done=0, bar=document.getElementById('b'), msg=document.getElementById('m');
+  var N=12, parts=[], done=0, bar=document.getElementById('b'), msg=document.getElementById('m');
   try{
-    var v='?v=2';
+    var v='?v=3';
     await Promise.all(Array.from({length:N},function(_,i){
-      var name='g/p'+String(i).padStart(2,'0')+'.txt'+v;
+      var name='g3/p'+String(i).padStart(2,'0')+'.txt'+v;
       return fetch(name,{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('Parça '+i+' alınamadı ('+r.status+')');return r.text();}).then(function(t){parts[i]=t.trim();done++;bar.style.width=(done/N*100)+'%';});
     }));
     var b64=parts.join('');
