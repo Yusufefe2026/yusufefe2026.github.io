@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Başkan Simülatörü — Ülkeyi sen yönet</title>
-<meta name="description" content="Başkan Simülatörü: tarayıcıda oynanan 3D ülke yönetim oyunu. Kararlar, zincirleme olaylar, meclis oylamaları, senaryolar ve 20 başarım.">
+<meta name="description" content="Başkan Simülatörü: tarayıcıda oynanan 3D ülke yönetim oyunu. Kararlar, zincirleme olaylar, meclis oylamaları, canlı TV yayınları, sosyal medya ve 25 başarım.">
 <style>
 :root{--bg:#0b1326;--bg2:#111c36;--card:rgba(255,255,255,.05);--line:rgba(255,255,255,.1);--gold:#f2c14e;--blue:#5aa9ff;--text:#eef2fb;--muted:#9fb0cf}
 *{box-sizing:border-box}html{scroll-behavior:smooth}
@@ -33,11 +33,12 @@ h2{font-size:clamp(26px,4vw,38px);margin:0 0 10px}.sub{color:var(--muted);margin
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px}
 .card .i{font-size:28px}.card h3{margin:8px 0 6px;font-size:18px}.card p{margin:0;color:var(--muted);font-size:15px}
+.card.new{border-color:rgba(242,193,78,.45)}.card.new h3::after{content:"YENİ";margin-left:8px;font-size:10px;letter-spacing:.08em;vertical-align:middle;background:var(--gold);color:#1a1405;padding:2px 6px;border-radius:6px}
 .event{background:linear-gradient(135deg,rgba(90,169,255,.12),rgba(242,193,78,.08));border:1px solid var(--line);border-radius:18px;padding:28px;max-width:720px}
 .choices{display:flex;gap:12px;flex-wrap:wrap;margin-top:16px}.choices button{flex:1;min-width:200px;background:var(--card);border:1px solid var(--line);color:var(--text);padding:14px;border-radius:12px;cursor:pointer;font-size:15px;text-align:left}
 .choices button:hover{border-color:var(--gold)}#result{margin-top:16px;color:var(--gold);min-height:24px}
 table{width:100%;border-collapse:collapse}td,th{padding:12px;border-bottom:1px solid var(--line);text-align:left}th{color:var(--muted);font-weight:600;font-size:14px}
-.ach{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}.ach div{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;font-size:14px}.ach b{display:block}
+.ach{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}.ach div{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;font-size:14px}.ach b{display:block}.ach .secret{opacity:.7;border-style:dashed}
 .steps{counter-reset:s;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}.steps .card::before{counter-increment:s;content:counter(s);display:inline-grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--gold);color:#1a1405;font-weight:800}
 details{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:10px}summary{cursor:pointer;font-weight:600}details p{color:var(--muted);margin:10px 0 0}
 .cta{text-align:center}
@@ -55,7 +56,7 @@ footer{padding:30px 0;color:var(--muted);font-size:14px;border-top:1px solid var
 <h1 data-t="h1">Ülkeyi <em>sen</em> yönet.</h1>
 <p data-t="hp">Kararlarını ver, bütçeyi dengele, meclisi ikna et ve şehrini büyüt. Her seçimin sonuçları aylar sonra karşına çıkabilir.</p>
 <a class="btn" href="oyun.html" data-t="play">▶ Hemen Oyna</a> <a class="btn ghost" href="#ozellikler" data-t="more">Daha fazla</a>
-<div class="stats"><div><b>20</b><span data-t="s1">başarım</span></div><div><b>4</b><span data-t="s2">oyun modu</span></div><div><b>8</b><span data-t="s3">yıllık görev</span></div><div><b>0 ₺</b><span data-t="s4">ücretsiz, kurulum yok</span></div></div>
+<div class="stats"><div><b>25</b><span data-t="s1">başarım</span></div><div><b>4</b><span data-t="s2">oyun modu</span></div><div><b>8</b><span data-t="s3">yıllık görev</span></div><div><b>0 ₺</b><span data-t="s4">ücretsiz, kurulum yok</span></div></div>
 </div>
 <div class="sky"><svg viewBox="0 0 1200 260" preserveAspectRatio="none"><g fill="#0a1120">
 <rect x="0" y="170" width="90" height="90"/><rect x="100" y="120" width="70" height="140"/><rect x="180" y="150" width="110" height="110"/><rect x="300" y="80" width="60" height="180"/><polygon points="370,260 370,140 430,110 490,140 490,260"/><rect x="500" y="160" width="90" height="100"/><rect x="600" y="40" width="56" height="220"/><rect x="624" y="20" width="8" height="22"/><rect x="666" y="130" width="100" height="130"/><rect x="776" y="100" width="70" height="160"/><ellipse cx="900" cy="150" rx="44" ry="34"/><rect x="850" y="150" width="100" height="110"/><rect x="960" y="170" width="80" height="90"/><rect x="1050" y="110" width="70" height="150"/><rect x="1130" y="160" width="70" height="100"/></g>
@@ -66,6 +67,9 @@ footer{padding:30px 0;color:var(--muted);font-size:14px;border-top:1px solid var
 <section id="ozellikler"><div class="wrap">
 <h2 data-t="fh">Bir ülkeyi yönetmek için her şey</h2><p class="sub" data-t="fs">Onay, ekonomi, istikrar ve hazine arasında denge kur. Her karar bir bedel ister.</p>
 <div class="grid">
+<div class="card new"><div class="i">📺</div><h3>Canlı TV yayınları</h3><p>Sunucunun süreli sorularını cevapla, seçim tartışmasında rakibinle karşı karşıya gel. Gaf yaparsan herkes konuşur.</p></div>
+<div class="card new"><div class="i">📲</div><h3>Sosyal medya</h3><p>Gündemi takip et, paylaşım yap, viral ol. Hakkında çıkan komik videolara nasıl cevap vereceksin?</p></div>
+<div class="card new"><div class="i">👽</div><h3>Çılgın sürprizler</h3><p>UFO, göktaşı, bakanlığa aday olan bir kedi… Nadir olaylar ve gizli başarımlar seni bekliyor.</p></div>
 <div class="card"><div class="i">🏙️</div><h3>Yaşayan 3D şehir</h3><p>Hastane, üniversite, müze, emniyet merkezi ve finans kulesi inşa et; şehrin büyüdükçe değişsin.</p></div>
 <div class="card"><div class="i">🔗</div><h3>Zincirleme olaylar</h3><p>Bugünkü kararın 2–3 ay sonra yeni bir krize ya da fırsata dönüşür.</p></div>
 <div class="card"><div class="i">🏛️</div><h3>Meclis oylamaları</h3><p>Partindeki Reformcular, Muhafazakârlar ve Liberaller oy verir. Sadakatleri düşerse yasan düşer.</p></div>
@@ -90,9 +94,9 @@ footer{padding:30px 0;color:var(--muted);font-size:14px;border-top:1px solid var
 </div></section>
 
 <section id="basarimlar"><div class="wrap">
-<h2 data-t="ah">20 başarım</h2><p class="sub" data-t="as">Hepsini açabilecek misin?</p>
+<h2 data-t="ah">25 başarım</h2><p class="sub" data-t="as">Hepsini açabilecek misin? İkisi gizli.</p>
 <div class="ach">
-<div>✍️<b>İlk imza</b>İlk kararını ver</div><div>📅<b>İlk yıl</b>12 ayı tamamla</div><div>🗳️<b>Dört yıl daha</b>Yeniden seçil</div><div>📜<b>Tarihe geçen</b>İki dönemi tamamla</div><div>❤️<b>Halkın sevgilisi</b>Onay %80</div><div>📈<b>Ekonomi mucizesi</b>Ekonomi 85</div><div>💰<b>Dolu kasa</b>Hazine 400</div><div>🕊️<b>Huzur ülkesi</b>İstikrar 85</div><div>⚖️<b>Kusursuz denge</b>Üç gösterge 65+</div><div>🏗️<b>Müteahhit başkan</b>6 yapı inşa et</div><div>🔗<b>Kararların yankısı</b>3 olay zinciri bitir</div><div>🖋️<b>Masa başı</b>50 karar ver</div><div>🔄<b>Uçurumdan dönüş</b>Batan hazineyi kurtar</div><div>🔥<b>Zor yol</b>Zor seviyede 24 ay</div><div>🏦<b>Kurtarıcı</b>Ekonomik çöküşü kazan</div><div>🏙️<b>Küllerinden</b>Yeniden doğuşu kazan</div><div>🧾<b>Borçsuz</b>Borç batağını kazan</div><div>🤝<b>Parti birliği</b>Partini bir arada tut</div><div>🏛️<b>Meclis ustası</b>Meclisi yönet</div><div>💥<b>Kısa saltanat</b>İlk yılda görevi kaybet</div>
+<div>✍️<b>İlk imza</b>İlk kararını ver</div><div>📅<b>İlk yıl</b>12 ayı tamamla</div><div>🗳️<b>Dört yıl daha</b>Yeniden seçil</div><div>📜<b>Tarihe geçen</b>İki dönemi tamamla</div><div>❤️<b>Halkın sevgilisi</b>Onay %80</div><div>📈<b>Ekonomi mucizesi</b>Ekonomi 85</div><div>💰<b>Dolu kasa</b>Hazine 400</div><div>🕊️<b>Huzur ülkesi</b>İstikrar 85</div><div>⚖️<b>Kusursuz denge</b>Üç gösterge 65+</div><div>🏗️<b>Müteahhit başkan</b>6 yapı inşa et</div><div>🔗<b>Kararların yankısı</b>3 olay zinciri bitir</div><div>🖋️<b>Masa başı</b>50 karar ver</div><div>🔄<b>Uçurumdan dönüş</b>Batan hazineyi kurtar</div><div>🔥<b>Zor yol</b>Zor seviyede 24 ay</div><div>🏦<b>Kurtarıcı</b>Ekonomik çöküşü kazan</div><div>🏙️<b>Küllerinden</b>Yeniden doğuşu kazan</div><div>🧾<b>Borçsuz</b>Borç batağını kazan</div><div>🤝<b>Parti birliği</b>Partini bir arada tut</div><div>🏛️<b>Meclis ustası</b>Meclisi yönet</div><div>📱<b>Viral başkan</b>3 kez viral ol</div><div>🎤<b>Ekran yıldızı</b>Canlı yayında 5+ puan</div><div>🥊<b>Tartışma galibi</b>Seçim tartışmasını kazan</div><div class="secret">🔒<b>Gizli başarım</b>???</div><div class="secret">🔒<b>Gizli başarım</b>???</div><div>💥<b>Kısa saltanat</b>İlk yılda görevi kaybet</div>
 </div></div></section>
 
 <section><div class="wrap">
@@ -117,7 +121,7 @@ footer{padding:30px 0;color:var(--muted);font-size:14px;border-top:1px solid var
 <footer>© 2026 Başkan Simülatörü</footer>
 
 <script>
-var EN={nf:"Features",nm:"Modes",na:"Achievements",nq:"FAQ",h1:"Run the <em>country</em>.",hp:"Make decisions, balance the budget, win over parliament and grow your city. Every choice can come back months later.",play:"▶ Play now",more:"Learn more",s1:"achievements",s2:"game modes",s3:"year term",s4:"free, no install",fh:"Everything you need to run a country",fs:"Balance approval, economy, stability and treasury. Every decision has a price.",eh:"One decision, many consequences",es:"An example from the game: what would you do?",mh:"Game modes",ms:"With easy, normal and hard difficulty.",ah:"20 achievements",as:"Can you unlock them all?",hh:"How to play",qh:"FAQ",ch:"The country awaits.",cs:"The oath ceremony is ready. What will your first decision be?"};
+var EN={nf:"Features",nm:"Modes",na:"Achievements",nq:"FAQ",h1:"Run the <em>country</em>.",hp:"Make decisions, balance the budget, win over parliament and grow your city. Every choice can come back months later.",play:"▶ Play now",more:"Learn more",s1:"achievements",s2:"game modes",s3:"year term",s4:"free, no install",fh:"Everything you need to run a country",fs:"Balance approval, economy, stability and treasury. Every decision has a price.",eh:"One decision, many consequences",es:"An example from the game: what would you do?",mh:"Game modes",ms:"With easy, normal and hard difficulty.",ah:"25 achievements",as:"Can you unlock them all? Two are secret.",hh:"How to play",qh:"FAQ",ch:"The country awaits.",cs:"The oath ceremony is ready. What will your first decision be?"};
 var TR={};document.querySelectorAll("[data-t]").forEach(function(e){TR[e.dataset.t]=e.innerHTML});
 function setL(l){document.querySelectorAll("[data-t]").forEach(function(e){var d=l==="en"?EN:TR;if(d[e.dataset.t])e.innerHTML=d[e.dataset.t]});document.documentElement.lang=l;document.getElementById("lang").textContent=l==="en"?"TR":"EN";try{localStorage.setItem("bs_site_lang",l)}catch(x){}}
 document.getElementById("lang").onclick=function(){setL(document.documentElement.lang==="en"?"tr":"en")};
